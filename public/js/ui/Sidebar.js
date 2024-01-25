@@ -20,8 +20,8 @@ class Sidebar {
 	static initToggleButton() {
 		const body = document.querySelector('body')
 		const sidebarBtn = document.querySelector('.sidebar-toggle')
-	
-		sidebarBtn.addEventListener('click', ()=>{
+
+		sidebarBtn.addEventListener('click', () => {
 			body.classList.toggle('sidebar-open')
 			body.classList.toggle('sidebar-collapse')
 		})
@@ -30,9 +30,30 @@ class Sidebar {
 	/**
 	 * При нажатии на кнопку входа, показывает окно входа
 	 * (через найденное в App.getModal)
-	 * При нажатии на кнопку регастрации показывает окно регистрации
+	 * При нажатии на кнопку регистрации показывает окно регистрации
 	 * При нажатии на кнопку выхода вызывает User.logout и по успешному
 	 * выходу устанавливает App.setState( 'init' )
 	 * */
-	static initAuthLinks() {}
+	static initAuthLinks() {
+		const loginBtn = document.querySelector('.menu-item_login')
+		const registerBtn = document.querySelector('.menu-item_register')
+		const logoutBtn = document.querySelector('.menu-item_logout')
+
+		loginBtn.addEventListener('click', () => {
+			const modalLogin = App.getModal('login')
+			modalLogin.open()
+		})
+
+		registerBtn.addEventListener('click', () => {
+			const modalRegister = App.getModal('register')
+			modalRegister.open()
+		})
+
+		logoutBtn.addEventListener('click', () => {
+			const response = User.logout()
+			if (response.success) {
+				App.setState('init')
+			}
+		})
+	}
 }
