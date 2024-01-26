@@ -5,7 +5,7 @@
  * */
 class User {
 	constructor() {
-		this.url = '/user'
+		this.URL = '/user'
 	}
 
 	/**
@@ -41,7 +41,7 @@ class User {
 	 * */
 	static fetch(callback) {
 		createRequest({
-			url: this.url + '/current',
+			url: this.URL + '/current',
 			method: 'GET',
 			callback: (err, response) => {
 				if (response && response.success) {
@@ -82,7 +82,7 @@ class User {
 	 * */
 	static register(data, callback) {
 		createRequest({
-			url: this.URL + '/register',
+			url: '/user/register',
 			method: 'POST',
 			data: data,
 			callback: (err, response) => {
