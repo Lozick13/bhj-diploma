@@ -18,6 +18,7 @@ const createRequest = (options = {}) => {
 
 	// data
 	let newUrl = url
+	const formData = new FormData()
 	if (data) {
 		if (method === 'GET') {
 			const dataString = Object.keys(data)
@@ -26,8 +27,6 @@ const createRequest = (options = {}) => {
 
 			newUrl += `?${dataString}`
 		} else {
-			const formData = new FormData()
-
 			Object.keys(data).forEach(key => formData.append(key, data[key]))
 		}
 	}
