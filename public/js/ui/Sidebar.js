@@ -40,13 +40,11 @@ class Sidebar {
 		const logoutBtn = document.querySelector('.menu-item_logout')
 
 		loginBtn.addEventListener('click', () => {
-			const modalLogin = App.getModal('login')
-			modalLogin.open()
+			App.getModal('login').open()
 		})
 
 		registerBtn.addEventListener('click', () => {
-			const modalRegister = App.getModal('register')
-			modalRegister.open()
+			App.getModal('register').open()
 		})
 
 		logoutBtn.addEventListener('click', () => {
