@@ -3,57 +3,42 @@
  * на сервер.
  * */
 const createRequest = (options = {}) => {
-	const xhr = new XMLHttpRequest(),
-		url = options.url,
-		method = options.method,
-		callback = options.callback
+	const xhr = new XMLHttpRequest()
+	const [url, data, method, callback] = options.data
+		? options
+		: [options.url, null, options.method, options.callback]
 
 	xhr.responseType = 'json'
 
 	// события
 	xhr.addEventListener('load', () => {
-		if (xhr.status === 200) {
-			callback(null, xhr.response)
-		} else {
-			callback({ status: xhr.status, statusText: xhr.statusText }, null)
-		}
+		callback(null, xhr.response)
 	})
 	xhr.addEventListener('error', () => {
 		callback({ status: xhr.status, statusText: xhr.statusText }, null)
 	})
 
+	// data
+	let newUrl = url
+	if (data) {
+		if (method === 'GET') {
+			const dataString = Object.keys(data)
+				.map(key => `${key}=${data[key]}`)
+				.join('&')
+
+			newUrl += `?${dataString}`
+		} else {
+			const formData = new FormData()
+
+			Object.keys(data).forEach(key => formData.append(key, data[key]))
+		}
+	}
+
 	// запросы
-	if (method === 'GET') {
-		let newUrl = url
-
-		if (options.data && options.data.mail) {
-			newUrl += '?mail=' + options.data.mail
-		}
-		if (options.data && options.data.password) {
-			newUrl += '&password=' + options.data.password
-		}
-
-		try {
-			xhr.open(method, newUrl)
-			xhr.send()
-		} catch (e) {
-			callback(e)
-		}
-	} else {
-		const formData = new FormData()
-
-		if (options.data && options.data.mail) {
-			formData.append('mail', options.data.mail)
-		}
-		if (options.data && options.data.password) {
-			formData.append('password', options.data.password)
-		}
-
-		try {
-			xhr.open(method, url)
-			xhr.send(formData)
-		} catch (e) {
-			callback(e)
-		}
+	try {
+		xhr.open(method, newUrl)
+		method === 'GET' ? xhr.send() : xhr.send(formData)
+	} catch (e) {
+		callback(e)
 	}
 }
