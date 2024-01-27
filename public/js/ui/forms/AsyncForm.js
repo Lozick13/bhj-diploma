@@ -15,10 +15,9 @@ class AsyncForm {
 	constructor(element) {
 		if (!element) {
 			throw new Error('Передан пустой элемент')
-		} else {
-			this.element = element
-			this.registerEvents()
 		}
+		this.element = element
+		this.registerEvents()
 	}
 
 	/**
@@ -40,13 +39,8 @@ class AsyncForm {
 	 * }
 	 * */
 	getData() {
-		const data = {}
 		const formData = new FormData(this.element)
-
-		formData.forEach((value, key) => {
-			data[key] = value
-		})
-		return data
+		return Object.fromEntries(formData.entries())
 	}
 
 	onSubmit(options) {}
