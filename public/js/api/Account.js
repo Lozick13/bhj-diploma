@@ -4,9 +4,7 @@
  * Имеет свойство URL со значением '/account'
  * */
 class Account extends Entity {
-	constructor() {
-		this.url = '/account'
-	}
+	static url = '/account'
 
 	/**
 	 * Получает информацию о счёте
