@@ -3,10 +3,8 @@
  * на сервер.
  * */
 const createRequest = (options = {}) => {
+	const { url, data = {}, method, callback } = options
 	const xhr = new XMLHttpRequest()
-	const [url, data, method, callback] = options.data
-		? options
-		: [options.url, null, options.method, options.callback]
 
 	xhr.responseType = 'json'
 
