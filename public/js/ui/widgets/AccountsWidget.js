@@ -99,7 +99,7 @@ class AccountsWidget {
 			active.classList.remove('active')
 		}
 		element.classList.add('active')
-		App.showPage('transactions', { account_id: +id})
+		App.showPage('transactions', { account_id: id})
 	}
 
 	/**

@@ -25,7 +25,7 @@ const createRequest = (options = {}) => {
 				.map(key => `${key}=${data[key]}`)
 				.join('&')
 
-			newUrl += `?${dataString}`
+			if (dataString) newUrl += `?${dataString}`
 		} else {
 			Object.keys(data).forEach(key => formData.append(key, data[key]))
 		}

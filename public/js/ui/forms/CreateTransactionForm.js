@@ -18,7 +18,11 @@ class CreateTransactionForm extends AsyncForm {
 	 * */
 	renderAccountsList() {
 		const data = User.current()
-		const accountsSelect = document.querySelector('.accounts-select')
+		const accountsSelect = (this.element.id === 'new-income-form')
+			? document.querySelector(`#income-accounts-list`)
+			: document.querySelector(`#expense-accounts-list`)
+
+		accountsSelect.innerHTML = ''
 
 		if (data) {
 			Account.list(data, (err, accounts) => {
