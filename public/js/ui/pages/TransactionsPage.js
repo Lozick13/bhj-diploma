@@ -63,7 +63,6 @@ class TransactionsPage {
 	removeAccount() {
 		if (this.lastOptions && confirm('Вы действительно хотите удалить счёт?')) {
 			Account.remove(this.lastOptions, (err, response) => {
-				console.log(response)
 				if (response && response.success) {
 					TransactionsPage.clear()
 					App.updateWidgets()
