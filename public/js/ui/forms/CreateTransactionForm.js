@@ -18,26 +18,19 @@ class CreateTransactionForm extends AsyncForm {
 	 * */
 	renderAccountsList() {
 		const data = User.current()
-		const accountsSelect = (this.element.id === 'new-income-form')
-			? document.querySelector(`#income-accounts-list`)
-			: document.querySelector(`#expense-accounts-list`)
-
-		accountsSelect.innerHTML = ''
+		const accountsSelect =
+			this.element.id === 'new-income-form'
+				? this.element.querySelector(`#income-accounts-list`)
+				: this.element.querySelector(`#expense-accounts-list`)
 
 		if (data) {
 			Account.list(data, (err, accounts) => {
-				if (accounts.success) {
-					accounts.data.forEach(account => {
-						const option = document.createElement('option')
-
-						option.value = account.id
-						option.textContent = account.name
-
-						accountsSelect.appendChild(option)
-					})
-				}
-				if (err) {
-					throw new Error(err)
+				if (accounts && accounts.success) {
+					accountsSelect.innerHTML = accounts.data.reduce((html, account) => {
+						return (
+							html + `<option value="${account.id}">${account.name}</option>`
+						)
+					}, '')
 				}
 			})
 		}
@@ -56,9 +49,6 @@ class CreateTransactionForm extends AsyncForm {
 				App.getModal('newIncome').close()
 				App.getModal('newExpense').close()
 				App.update()
-			}
-			if (err) {
-				throw new Error(err)
 			}
 		})
 	}

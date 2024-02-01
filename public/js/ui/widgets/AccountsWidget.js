@@ -18,6 +18,7 @@ class AccountsWidget {
 			throw new Error('Передан пустой элемент')
 		}
 		this.element = element
+		this.registerEvents()
 		this.update()
 	}
 
@@ -30,16 +31,16 @@ class AccountsWidget {
 	 * */
 	registerEvents() {
 		const createAccountBtn = document.querySelector('.create-account')
-		const accounts = document.querySelectorAll('.account')
+		const accountsPanel = document.querySelector('.accounts-panel')
 
 		createAccountBtn.addEventListener('click', () => {
 			App.getModal('createAccount').open()
 		})
 
-		accounts.forEach(account => {
-			account.addEventListener('click', () => {
-				this.onSelectAccount(account)
-			})
+		accountsPanel.addEventListener('click', e => {
+			if (e.target.tagName === 'A') {
+				this.onSelectAccount(e.target.parentElement)
+			}
 		})
 	}
 
@@ -62,10 +63,6 @@ class AccountsWidget {
 					accounts.data.forEach(account => {
 						this.renderItem(account)
 					})
-					this.registerEvents()
-				}
-				if (err) {
-					throw new Error(err)
 				}
 			})
 		}
@@ -99,7 +96,7 @@ class AccountsWidget {
 			active.classList.remove('active')
 		}
 		element.classList.add('active')
-		App.showPage('transactions', { account_id: id})
+		App.showPage('transactions', { account_id: id })
 	}
 
 	/**

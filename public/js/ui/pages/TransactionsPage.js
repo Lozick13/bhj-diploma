@@ -33,22 +33,18 @@ class TransactionsPage {
 	 * */
 	registerEvents() {
 		const removeAccountBtn = document.querySelector('.remove-account')
-		const transactionRemoveBtns = document.querySelectorAll(
-			'.transaction__remove'
-		)
+		const transactionsContainer = document.querySelector('.content')
 
 		removeAccountBtn.addEventListener('click', () => {
 			this.removeAccount()
 		})
-		console.log(transactionRemoveBtns)
-		if (transactionRemoveBtns) {
-			transactionRemoveBtns.forEach(transactionRemoveBtn => {
-				const idTransaction = transactionRemoveBtn.getAttribute('data-id')
-				transactionRemoveBtn.addEventListener('click', () => {
-					this.removeTransaction(idTransaction)
-				})
-			})
-		}
+
+		transactionsContainer.addEventListener('click', e => {
+			if (e.target.classList.contains('transaction__remove')) {
+				const idTransaction = e.target.getAttribute('data-id')
+				this.removeTransaction(idTransaction)
+			}
+		})
 	}
 
 	/**
@@ -62,14 +58,13 @@ class TransactionsPage {
 	 * */
 	removeAccount() {
 		if (this.lastOptions && confirm('Вы действительно хотите удалить счёт?')) {
-			Account.remove(this.lastOptions, (err, response) => {
+			const accountData = { id: this.lastOptions.account_id }
+
+			Account.remove(accountData, (err, response) => {
 				if (response && response.success) {
-					TransactionsPage.clear()
+					this.clear()
 					App.updateWidgets()
 					App.updateForms()
-				}
-				if (err) {
-					throw new Error(err)
 				}
 			})
 		}
@@ -83,12 +78,10 @@ class TransactionsPage {
 	 * */
 	removeTransaction(id) {
 		if (confirm('Вы действительно хотите удалить эту транзакцию?')) {
-			Transaction.remove(id, (err, response) => {
+			Transaction.remove({ id: id }, (err, response) => {
 				if (response && response.success) {
-					App.update()
-				}
-				if (err) {
-					throw new Error(err)
+					this.update()
+					App.updateWidgets()
 				}
 			})
 		}
@@ -106,14 +99,8 @@ class TransactionsPage {
 				if (account && account.success) {
 					this.renderTitle(account.data.name)
 				}
-				if (err) {
-					throw new Error(err)
-				}
 			})
 			Transaction.list(options, (err, transaction) => {
-				if (err) {
-					throw new Error(err)
-				}
 				this.renderTransactions(transaction)
 			})
 		}
@@ -197,14 +184,14 @@ class TransactionsPage {
 	 * используя getTransactionHTML
 	 * */
 	renderTransactions(data) {
+		const content = document.querySelector('.content')
+
 		if (data.data) {
-			const content = document.querySelector('.content')
+			content.innerHTML = data.data.reduce((html, transaction) => {
+				return html + this.getTransactionHTML(transaction).outerHTML
+			}, '')
+		} else {
 			content.innerHTML = ''
-			data.data.forEach(el => {
-				const transactionHTML = this.getTransactionHTML(el)
-				content.appendChild(transactionHTML)
-			})
-			this.registerEvents()
 		}
 	}
 }

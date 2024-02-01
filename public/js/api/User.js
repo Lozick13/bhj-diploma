@@ -27,8 +27,7 @@ class User {
 	 * из локального хранилища
 	 * */
 	static current() {
-		const userString = JSON.parse(localStorage.getItem('user'))
-		return userString
+		return JSON.parse(localStorage.getItem('user'))
 	}
 
 	/**
